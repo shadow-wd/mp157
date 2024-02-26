@@ -67,8 +67,10 @@ function comple_uboot(){
     fi
     echo "Compiling uboot..."
     make distclean
-    make ARCH=arm CROSS_COMPILE=arm-none-linux-gnueabihf- stm32mp157d_atk_defconfig
-    make V=1 ARCH=arm CROSS_COMPILE=arm-none-linux-gnueabihf- DEVICE_TREE=stm32mp157d-atk all
+    # config uboot
+    make O="./out" ARCH=arm CROSS_COMPILE=arm-none-linux-gnueabihf- stm32mp157d_atk_defconfig
+    # compile uboot
+    make V=1 O="./out" ARCH=arm CROSS_COMPILE=arm-none-linux-gnueabihf- DEVICE_TREE=stm32mp157d-atk all
 }
 
 function image(){
@@ -76,7 +78,7 @@ function image(){
     mkdir -p "$IMAGE_DIR"
     cp -vf "$HOME_PATH/tfa/build/trusted/tf-a-stm32mp157d-atk-trusted.stm32" "$HOME_PATH/$IMAGE_DIR"
     cp -vf "$HOME_PATH/tfa/build/serialboot/tf-a-stm32mp157d-atk-serialboot.stm32" "$HOME_PATH/$IMAGE_DIR"
-    cp -vf "$HOME_PATH/uboot/u-boot.stm32" "$HOME_PATH/$IMAGE_DIR"
+    cp -vf "$HOME_PATH/uboot/out/u-boot.stm32" "$HOME_PATH/$IMAGE_DIR"
 }
 
 
