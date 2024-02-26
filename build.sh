@@ -58,6 +58,7 @@ function comple_tfa(){
 
 function comple_uboot(){
     UBOOT_DIR="uboot"
+    export KBUILD_OUTPUT="$HOME_PATH/uboot/out"
     # 进入uboot目录
     if [ -d "$UBOOT_DIR" ]; then
         cd "$UBOOT_DIR" || exit 1
@@ -68,9 +69,10 @@ function comple_uboot(){
     echo "Compiling uboot..."
     make distclean
     # config uboot
-    make O="./out" ARCH=arm CROSS_COMPILE=arm-none-linux-gnueabihf- stm32mp157d_atk_defconfig
+    make stm32mp157d_atk_defconfig
     # compile uboot
-    make V=1 O="./out" ARCH=arm CROSS_COMPILE=arm-none-linux-gnueabihf- DEVICE_TREE=stm32mp157d-atk all
+    make V=1 DEVICE_TREE=stm32mp157d-atk all
+    cd ..
 }
 
 function image(){
