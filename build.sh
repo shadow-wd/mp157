@@ -45,7 +45,7 @@ function compile_tfa(){
     # 编译tf-a
     echo "Compiling tf-a..."
     make -f "../$MAKEFILE" all
-    
+
     cd ..
 }
 
@@ -72,6 +72,7 @@ function compile_uboot(){
 
 function compile_linux(){
     LINUX_DIR="linux"
+    export KBUILD_OUTPUT="$HOME_PATH/linux/out/"
     # 进入linux目录
     if [ -d "$LINUX_DIR" ]; then
         cd "$LINUX_DIR" || exit 1
@@ -80,10 +81,10 @@ function compile_linux(){
         exit 1
     fi
     echo "compiling linux..."
-    make ARCH=arm CROSS_COMPILE=arm-none-linux-gnueabihf- distclean
-    make ARCH=arm CROSS_COMPILE=arm-none-linux-gnueabihf- stm32mp1_atk_defconfig
-    make ARCH=arm CROSS_COMPILE=arm-none-linux-gnueabihf- menuconfig
-    make ARCH=arm CROSS_COMPILE=arm-none-linux-gnueabihf- uImage dtbs LOADADDR=0XC2000040 -j16
+    make distclean
+    make stm32mp1_atk_defconfig
+    make menuconfig
+    make uImage dtbs LOADADDR=0XC2000040 -j16
     cd ..
 }
 
