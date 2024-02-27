@@ -6,6 +6,9 @@
 
 编译tf-a        ./build.sh tfa  
 
+编译linux       ./build.sh linux  
+
+
 将需要烧录的文件打包：  
 
 ./build.sh image  

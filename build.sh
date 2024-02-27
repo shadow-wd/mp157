@@ -12,7 +12,7 @@ function print_usage()
 }
 
 
-function comple_tfa(){
+function compile_tfa(){
     # 设置变量
     TFA_DIR="tfa"
     TFA_SUBDIR="tf-a-stm32mp-2.2.r1"
@@ -45,19 +45,14 @@ function comple_tfa(){
     # 编译tf-a
     echo "Compiling tf-a..."
     make -f "../$MAKEFILE" all
-
-    # 检查编译是否成功
-    if [ $? -eq 0 ]; then
-        echo "tf-a compilation successful."
-    else
-        echo "Error: tf-a compilation failed."
-    fi
-
+    
+    cd ..
 }
 
 
-function comple_uboot(){
+function compile_uboot(){
     UBOOT_DIR="uboot"
+    # 指定uboot输出目录
     export KBUILD_OUTPUT="$HOME_PATH/uboot/out"
     # 进入uboot目录
     if [ -d "$UBOOT_DIR" ]; then
@@ -72,6 +67,23 @@ function comple_uboot(){
     make stm32mp157d_atk_defconfig
     # compile uboot
     make V=1 DEVICE_TREE=stm32mp157d-atk all
+    cd ..
+}
+
+function compile_linux(){
+    LINUX_DIR="linux"
+    # 进入linux目录
+    if [ -d "$LINUX_DIR" ]; then
+        cd "$LINUX_DIR" || exit 1
+    else
+        echo "Error: Directory $LINUX_DIR not found"
+        exit 1
+    fi
+    echo "compiling linux..."
+    make ARCH=arm CROSS_COMPILE=arm-none-linux-gnueabihf- distclean
+    make ARCH=arm CROSS_COMPILE=arm-none-linux-gnueabihf- stm32mp1_atk_defconfig
+    make ARCH=arm CROSS_COMPILE=arm-none-linux-gnueabihf- menuconfig
+    make ARCH=arm CROSS_COMPILE=arm-none-linux-gnueabihf- uImage dtbs LOADADDR=0XC2000040 -j16
     cd ..
 }
 
@@ -91,13 +103,16 @@ fi
 
 case "$1" in
     "uboot")
-        comple_uboot
+        compile_uboot
         ;;
     "tfa")
-        comple_tfa
+        compile_tfa
         ;;
     "image")
         image
+        ;;
+    "linux")
+        compile_linux
         ;;
     *)
         print_usage
