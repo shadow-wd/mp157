@@ -6,7 +6,7 @@ HOME_PATH=$PWD
 function print_usage()
 {
     echo ""
-    echo "format: ./build.sh [tfa/uboot]"
+    echo "format: ./build.sh [tfa/uboot/linux/image]"
     echo "example: ./build.sh tfa"
     echo ""
 }
